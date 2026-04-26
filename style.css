@@ -714,8 +714,9 @@ footer strong {
 
 @media (max-width: 760px) {
     .page-wrapper {
+        max-width: calc(100vw - 70px);
         padding: 20px 16px 40px;
-        padding-right: calc(16px + 70px);
+        margin: 0 auto;
     }
 
     .foto-item {
@@ -729,6 +730,17 @@ footer strong {
 
     .patrocinio-grid {
         grid-template-columns: 1fr;
+        gap: 18px;
+    }
+
+    .patrocinio-card {
+        padding: 20px;
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .patrocinio-card .btn-whatsapp {
+        width: 100%;
     }
 
     .carrossel-item img,
