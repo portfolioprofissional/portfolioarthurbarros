@@ -33,38 +33,6 @@ function confirmarPatrocinio(tipo = 'financeiro') {
 let mediaItems = [];
 let currentMediaIndex = 0;
 
-// alterna o estado de selecao de cada opcao
-function selecionarItem(elemento) {
-    elemento.classList.toggle('selecionado');
-}
-
-// envia o pedido de patrocinio para o WhatsApp
-function confirmarPatrocinio(tipo = 'financeiro') {
-    const telefone = "5585981752012"; // COLOQUE O WHATSAPP DO ATLETA AQUI
-    let mensagem = '';
-
-    if (tipo === 'colaborativo') {
-        mensagem = encodeURIComponent('Ola, gostaria de oferecer meu servico para apoiar o atleta Arthur nessa caminhada!');
-        window.open(`https://wa.me/${telefone}?text=${mensagem}`, '_blank');
-        return;
-    }
-
-    const selecionados = document.querySelectorAll('.opcao-item.selecionado');
-    const itens = [];
-    
-    selecionados.forEach(item => {
-        itens.push(item.innerText);
-    });
-
-    if (itens.length === 0) {
-        alert("Por favor, selecione ao menos um item para incentivar!");
-        return;
-    }
-
-    mensagem = encodeURIComponent(`Ola, Quero incentivar o atleta com: ${itens.join(', ')} e participar dessa estrada de sucesso.`);
-    window.open(`https://wa.me/${telefone}?text=${mensagem}`, '_blank');
-}
-
 function openMediaLightbox(index) {
     currentMediaIndex = index;
     renderMediaLightbox();
@@ -108,6 +76,11 @@ function renderMediaLightbox() {
 function fecharMediaLightbox(event) {
     if (event.target.id === 'media-lightbox' || event.target.classList.contains('lightbox-close')) {
         const lightbox = document.getElementById('media-lightbox');
+        const activeVideo = lightbox.querySelector('video');
+        if (activeVideo) {
+            activeVideo.pause();
+            activeVideo.currentTime = 0;
+        }
         lightbox.classList.remove('active');
         document.body.style.overflow = '';
     }
