@@ -33,6 +33,38 @@ function confirmarPatrocinio(tipo = 'financeiro') {
 let mediaItems = [];
 let currentMediaIndex = 0;
 
+// alterna o estado de selecao de cada opcao
+function selecionarItem(elemento) {
+    elemento.classList.toggle('selecionado');
+}
+
+// envia o pedido de patrocinio para o WhatsApp
+function confirmarPatrocinio(tipo = 'financeiro') {
+    const telefone = "5585981752012"; // COLOQUE O WHATSAPP DO ATLETA AQUI
+    let mensagem = '';
+
+    if (tipo === 'colaborativo') {
+        mensagem = encodeURIComponent('Ola, gostaria de oferecer meu servico para apoiar o atleta Arthur nessa caminhada!');
+        window.open(`https://wa.me/${telefone}?text=${mensagem}`, '_blank');
+        return;
+    }
+
+    const selecionados = document.querySelectorAll('.opcao-item.selecionado');
+    const itens = [];
+    
+    selecionados.forEach(item => {
+        itens.push(item.innerText);
+    });
+
+    if (itens.length === 0) {
+        alert("Por favor, selecione ao menos um item para incentivar!");
+        return;
+    }
+
+    mensagem = encodeURIComponent(`Ola, Quero incentivar o atleta com: ${itens.join(', ')} e participar dessa estrada de sucesso.`);
+    window.open(`https://wa.me/${telefone}?text=${mensagem}`, '_blank');
+}
+
 function openMediaLightbox(index) {
     currentMediaIndex = index;
     renderMediaLightbox();
@@ -177,28 +209,6 @@ function initMediaItems() {
             item.addEventListener('click', () => openMediaLightbox(index));
         }
     });
-
-    // Carregar vídeos ao hover para melhor performance em celular
-    mediaItems.forEach(item => {
-        if (item.dataset.type === 'video') {
-            const video = item.querySelector('video');
-            if (video) {
-                // Começar a carregar quando o usuário passar o mouse (desktop) ou após scroll
-                item.addEventListener('mouseenter', () => {
-                    if (video.readyState < 2) {
-                        video.load();
-                    }
-                });
-
-                // Para celular, carregar após a página carregar
-                setTimeout(() => {
-                    if (video.readyState < 2) {
-                        video.load();
-                    }
-                }, 1500);
-            }
-        }
-    });
 }
 
 function initCarouselDrag() {
@@ -311,39 +321,8 @@ function initBeltParallax() {
     updateBelt();
 }
 
-// Lazy loading de vídeos para melhor performance
-function initLazyLoadVideos() {
-    const videos = document.querySelectorAll('video');
-    
-    if ('IntersectionObserver' in window) {
-        const videoObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const video = entry.target;
-                    if (video.readyState < 2) {
-                        video.load();
-                    }
-                    videoObserver.unobserve(video);
-                }
-            });
-        }, {
-            rootMargin: '100px'
-        });
-
-        videos.forEach(video => {
-            videoObserver.observe(video);
-        });
-    } else {
-        // Fallback para navegadores sem suporte a IntersectionObserver
-        videos.forEach(video => {
-            video.load();
-        });
-    }
-}
-
 window.addEventListener('DOMContentLoaded', () => {
     initMediaItems();
-    initLazyLoadVideos();
     initGalleryDrag();
     initSliderDrag('videos-slider');
     initCarouselDrag();
